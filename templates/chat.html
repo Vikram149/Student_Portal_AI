@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Student Chatbot</title>
+
+    <link
+        rel="stylesheet"
+        href="/static/chatbot.css?v=3"
+    >
+
+    <!-- Markdown formatting -->
+    <script
+        src="https://cdn.jsdelivr.net/npm/marked/lib/marked.umd.js"
+        defer
+    ></script>
+
+    <!-- Sanitize Claude's generated HTML -->
+    <script
+        src="https://cdn.jsdelivr.net/npm/dompurify/dist/purify.min.js"
+        defer
+    ></script>
+
+    <!-- Chat history drawer -->
+    <script
+        src="/static/chat_drawer.js?v=3"
+        defer
+    ></script>
+
+    <!-- Main chatbot logic -->
+    <script
+        src="/static/chat.js?v=3"
+        defer
+    ></script>
+</head>
+
+<body>
+    <div class="app-layout">
+
+        <!-- ==========================================
+             Chat history drawer
+             ========================================== -->
+        <aside
+            id="chat-history-drawer"
+            class="chat-sidebar"
+            aria-label="Chat history"
+            hidden
+        >
+            <div class="sidebar-heading">
+                <h2>Student Chatbot</h2>
+                <p>Your personal study space</p>
+            </div>
+
+            <button
+                id="clear-chat"
+                type="button"
+                title="Start a new conversation"
+            >
+                <span aria-hidden="true">＋</span>
+                New Chat
+            </button>
+
+            <input
+                id="chat-search"
+                type="search"
+                placeholder="Search chat titles…"
+                aria-label="Search saved chat titles"
+                autocomplete="off"
+            >
+
+            <label
+                for="saved-chats"
+                class="history-label"
+            >
+                Saved conversations
+            </label>
+
+            <select id="saved-chats" size="12">
+                <option value="">
+                    Choose a saved conversation
+                </option>
+            </select>
+
+            <button
+                id="download-chat"
+                type="button"
+                title="Download the selected conversation"
+            >
+                <span aria-hidden="true">↓</span>
+                Download Chat
+            </button>
+
+            <button
+                id="rename-chat"
+                type="button"
+                title="Rename the selected conversation"
+            >
+                <span aria-hidden="true">✎</span>
+                Rename Chat
+            </button>
+
+            <button
+                id="delete-chat"
+                type="button"
+                title="Delete the selected conversation"
+            >
+                <span aria-hidden="true">🗑</span>
+                Delete Chat
+            </button>
+
+            <p class="sidebar-footer">
+                Your conversations are saved so you can return later.
+            </p>
+        </aside>
+
+
+        <!-- ==========================================
+             Main conversation panel
+             ========================================== -->
+        <main class="chat-container">
+
+            <header class="chat-header">
+                <button
+                    id="toggle-chat-history"
+                    type="button"
+                    aria-label="Open chat history"
+                    aria-controls="chat-history-drawer"
+                    aria-expanded="false"
+                    title="Open chat history"
+                >
+                    <img
+                        src="/static/spiderman_icon.png"
+                        alt=""
+                        width="30"
+                        height="30"
+                    >
+                </button>
+
+                <h1>Let’s learn something</h1>
+
+                <p>
+                    Ask, explore, and practise with Claude.
+                </p>
+            </header>
+
+
+            <!-- ==========================================
+                 Conversation messages
+                 ========================================== -->
+            <section
+                id="chat-messages"
+                class="chat-messages"
+                role="log"
+                aria-label="Chat conversation"
+                aria-live="polite"
+            >
+                <div class="message assistant">
+                    <p>
+                        Hi! I can help explain concepts, answer coding
+                        questions, and support your revision.
+                        What would you like to learn?
+                    </p>
+                </div>
+            </section>
+
+
+            <!-- Progress and error messages -->
+            <p
+                id="chat-status"
+                role="status"
+                aria-live="polite"
+            ></p>
+
+
+            <!-- ==========================================
+                 Selected shared-note sources
+                 ========================================== -->
+            <section
+                class="shared-source-bar"
+                aria-label="Shared note sources"
+            >
+                <div class="shared-source-heading">
+                    <div>
+                        <strong>Shared note sources</strong>
+
+                        <span id="shared-source-description">
+                            Ask Claude about notes shared by other students.
+                        </span>
+                    </div>
+
+                    <button
+                        id="open-shared-notes"
+                        type="button"
+                        aria-haspopup="dialog"
+                        aria-controls="shared-notes-dialog"
+                    >
+                        <span aria-hidden="true">📚</span>
+                        Select Notes
+                    </button>
+                </div>
+
+                <!-- Selected notes will appear here as removable chips -->
+                <div
+                    id="selected-shared-notes"
+                    class="selected-shared-notes"
+                    aria-live="polite"
+                >
+                    <span class="no-shared-notes">
+                        No shared notes selected
+                    </span>
+                </div>
+            </section>
+
+
+            <!-- ==========================================
+                 Question input
+                 ========================================== -->
+            <form id="chat-form" class="chat-form">
+
+                <label for="message-input">
+                    Your message
+                </label>
+
+                <textarea
+                    id="message-input"
+                    name="message"
+                    placeholder="Ask a study question… Enter to send, Shift + Enter for a new line."
+                    rows="3"
+                    maxlength="10000"
+                    required
+                ></textarea>
+
+                <button
+                    id="send-button"
+                    type="submit"
+                    title="Send your message"
+                >
+                    Send
+                    <span aria-hidden="true">➤</span>
+                </button>
+            </form>
+
+            <p class="chat-disclaimer">
+                AI can make mistakes. Check important answers.
+            </p>
+        </main>
+    </div>
+
+
+    <!-- ==========================================
+         Shared Notes selection dialog
+         ========================================== -->
+    <dialog
+        id="shared-notes-dialog"
+        class="shared-notes-dialog"
+        aria-labelledby="shared-notes-title"
+        aria-describedby="shared-notes-description"
+    >
+        <div class="shared-dialog-content">
+
+            <header class="shared-dialog-header">
+                <div>
+                    <h2 id="shared-notes-title">
+                        Select Shared Notes
+                    </h2>
+
+                    <p id="shared-notes-description">
+                        Choose a student, then select up to five notes
+                        that the student has shared with you.
+                    </p>
+                </div>
+
+                <button
+                    id="close-shared-notes"
+                    class="close-shared-notes"
+                    type="button"
+                    aria-label="Close shared notes"
+                    title="Close"
+                >
+                    ✕
+                </button>
+            </header>
+
+
+            <!-- Student selection -->
+            <div class="shared-student-section">
+                <label for="shared-note-student">
+                    Shared by student
+                </label>
+
+                <div class="shared-student-controls">
+                    <select id="shared-note-student">
+                        <option value="">
+                            Choose a student
+                        </option>
+                    </select>
+
+                    <button
+                        id="refresh-shared-notes"
+                        type="button"
+                        title="Refresh students and shared notes"
+                    >
+                        ↻ Refresh
+                    </button>
+                </div>
+            </div>
+
+
+            <!-- Dialog loading/error information -->
+            <p
+                id="shared-note-dialog-status"
+                class="shared-note-dialog-status"
+                role="status"
+                aria-live="polite"
+            ></p>
+
+
+            <!-- Shared note checkboxes are added here by JavaScript -->
+            <div
+                id="shared-note-list"
+                class="shared-note-list"
+                aria-live="polite"
+            >
+                <div class="shared-note-empty">
+                    Choose a student to view notes shared with you.
+                </div>
+            </div>
+
+
+            <!-- Selection counter and buttons -->
+            <footer class="shared-dialog-footer">
+                <span id="selected-shared-note-count">
+                    0 of 5 notes selected
+                </span>
+
+                <div class="shared-dialog-actions">
+                    <button
+                        id="cancel-shared-notes"
+                        type="button"
+                    >
+                        Cancel
+                    </button>
+
+                    <button
+                        id="apply-shared-notes"
+                        type="button"
+                    >
+                        Use Selected Notes
+                    </button>
+                </div>
+            </footer>
+        </div>
+    </dialog>
+</body>
+</html>

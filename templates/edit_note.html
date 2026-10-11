@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Edit Note</title>
+
+    <link
+        rel="stylesheet"
+        href="/static/style.css"
+    >
+</head>
+
+<body>
+
+    <div class="edit-note-page">
+
+        <div class="edit-note-card">
+
+            <h1>Edit Note</h1>
+
+            <form
+                action="/edit-note/{{ note.id }}"
+                method="post"
+            >
+
+                <input
+                    type="text"
+                    name="title"
+                    value="{{ note.title }}"
+                    required
+                >
+
+                <textarea
+                    name="content"
+                    required
+                >{{ note.content }}</textarea>
+
+                <button
+                    type="submit"
+                    class="save-edit-button"
+                >
+                    Save Changes
+                </button>
+
+            </form>
+
+            <a
+                href="/dashboard"
+                class="cancel-link"
+            >
+                Cancel
+            </a>
+
+        </div>
+
+    </div>
+
+</body>
+
+</html>

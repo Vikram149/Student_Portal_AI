@@ -1,0 +1,930 @@
+/* ==================================================
+   GLOBAL RESET
+================================================== */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    background-color: #f5f7fb;
+    color: #1f2937;
+    min-height: 100vh;
+}
+
+a {
+    text-decoration: none;
+}
+
+
+/* ==================================================
+   LOGIN + REGISTER PAGE
+================================================== */
+
+.login-page {
+    display: flex;
+    min-height: 100vh;
+}
+
+
+/* LEFT SIDE */
+
+.illustration-section {
+    width: 50%;
+    background-color: #ffffff;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    padding: 40px;
+}
+
+.illustration-box {
+    max-width: 430px;
+    text-align: center;
+}
+
+.illustration-circle {
+    width: 170px;
+    height: 170px;
+
+    margin: 0 auto 30px;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    background-color: #e8f2ff;
+    border-radius: 50%;
+
+    font-size: 72px;
+}
+
+.illustration-box h2 {
+    font-size: 30px;
+    color: #1f2937;
+    margin-bottom: 15px;
+}
+
+.illustration-box p {
+    color: #6b7280;
+    font-size: 16px;
+    line-height: 1.6;
+}
+
+
+/* RIGHT SIDE */
+
+.login-section {
+    width: 50%;
+    min-height: 100vh;
+
+    background-color: #1976e9;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    position: relative;
+    overflow: hidden;
+
+    border-top-left-radius: 30px;
+}
+
+
+/* DECORATIVE CIRCLES */
+
+.login-section::before {
+    content: "";
+
+    position: absolute;
+
+    width: 430px;
+    height: 430px;
+
+    border: 1px solid rgba(255, 255, 255, 0.65);
+    border-radius: 50%;
+
+    right: -220px;
+    bottom: -220px;
+}
+
+.login-section::after {
+    content: "";
+
+    position: absolute;
+
+    width: 340px;
+    height: 340px;
+
+    border: 1px solid rgba(255, 255, 255, 0.65);
+    border-radius: 50%;
+
+    right: -175px;
+    bottom: -175px;
+}
+
+
+/* LOGIN CARD */
+
+.login-card {
+    width: 390px;
+
+    background-color: #ffffff;
+
+    padding: 40px;
+
+    border-radius: 15px;
+
+    box-shadow:
+        0 18px 40px
+        rgba(0, 0, 0, 0.12);
+
+    position: relative;
+    z-index: 2;
+}
+
+.login-card h1 {
+    font-size: 30px;
+    color: #2f2f2f;
+    margin-bottom: 22px;
+}
+
+.login-subtitle {
+    font-size: 17px;
+    color: #4b5563;
+    margin-bottom: 28px;
+}
+
+
+/* FORM INPUTS */
+
+.input-group {
+    display: flex;
+    align-items: center;
+
+    height: 58px;
+
+    border: 1px solid #d1d5db;
+    border-radius: 30px;
+
+    padding: 0 18px;
+
+    margin-bottom: 18px;
+
+    background-color: #ffffff;
+
+    transition: 0.2s ease;
+}
+
+.input-group:focus-within {
+    border-color: #1976e9;
+
+    box-shadow:
+        0 0 0 3px
+        rgba(25, 118, 233, 0.12);
+}
+
+.input-icon {
+    margin-right: 12px;
+    font-size: 19px;
+}
+
+.input-group input {
+    width: 100%;
+
+    border: none;
+    outline: none;
+
+    background: transparent;
+
+    font-size: 15px;
+    color: #333333;
+}
+
+.input-group input::placeholder {
+    color: #a3a3a3;
+}
+
+
+/* LOGIN / REGISTER BUTTON */
+
+.login-button {
+    width: 100%;
+    height: 56px;
+
+    border: none;
+    border-radius: 30px;
+
+    background-color: #1976e9;
+    color: #ffffff;
+
+    font-size: 16px;
+    font-weight: 600;
+
+    cursor: pointer;
+
+    margin-top: 4px;
+
+    transition: 0.2s ease;
+}
+
+.login-button:hover {
+    background-color: #125fc0;
+}
+
+
+/* FORGOT PASSWORD */
+
+.forgot-password {
+    display: inline-block;
+
+    margin-top: 22px;
+
+    color: #555555;
+
+    font-size: 14px;
+}
+
+.forgot-password:hover {
+    color: #1976e9;
+}
+
+
+/* REGISTER / LOGIN LINK */
+
+.register-link {
+    margin-top: 24px;
+    padding-top: 20px;
+
+    border-top: 1px solid #eeeeee;
+
+    color: #6b7280;
+
+    font-size: 14px;
+}
+
+.register-link a {
+    color: #1976e9;
+    font-weight: bold;
+}
+
+
+/* MESSAGES */
+
+.error-message {
+    background-color: #fee2e2;
+    color: #b91c1c;
+
+    padding: 11px 13px;
+
+    margin-bottom: 18px;
+
+    border-radius: 8px;
+
+    font-size: 14px;
+}
+
+.success-message {
+    background-color: #dcfce7;
+    color: #15803d;
+
+    padding: 11px 13px;
+
+    margin-bottom: 18px;
+
+    border-radius: 8px;
+
+    font-size: 14px;
+}
+
+
+/* ==================================================
+   DASHBOARD
+================================================== */
+
+.dashboard-page {
+    min-height: 100vh;
+    background-color: #f5f7fb;
+}
+
+
+/* HEADER */
+
+.dashboard-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    padding: 24px 50px;
+
+    background: linear-gradient(
+        135deg,
+        #0f4c81,
+        #1976e9
+    );
+
+    color: white;
+
+    box-shadow:
+        0 4px 14px
+        rgba(0, 0, 0, 0.08);
+}
+
+.dashboard-title h1 {
+    margin-bottom: 5px;
+    font-size: 28px;
+}
+
+.dashboard-title p {
+    color: #dbeafe;
+    font-size: 14px;
+}
+
+.header-actions {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.note-count {
+    background-color:
+        rgba(255, 255, 255, 0.18);
+
+    padding: 9px 14px;
+
+    border-radius: 20px;
+
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.logout-button {
+    border: none;
+
+    padding: 10px 18px;
+
+    border-radius: 8px;
+
+    background-color: #ffffff;
+
+    color: #1976e9;
+
+    font-weight: bold;
+
+    cursor: pointer;
+}
+
+
+/* MAIN CONTENT */
+
+.dashboard-content {
+    max-width: 1200px;
+
+    margin: auto;
+
+    padding: 40px 25px;
+}
+
+
+/* SECTION HEADERS */
+
+.section-header {
+    margin-bottom: 18px;
+}
+
+.section-header h2 {
+    color: #1f2937;
+    margin-bottom: 5px;
+}
+
+.section-header p {
+    color: #6b7280;
+    font-size: 14px;
+}
+
+
+/* ADD NOTE */
+
+.note-form-section {
+    margin-bottom: 45px;
+}
+
+.note-form {
+    background-color: white;
+
+    padding: 25px;
+
+    border-radius: 14px;
+
+    box-shadow:
+        0 6px 20px
+        rgba(0, 0, 0, 0.06);
+
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.note-form input,
+.note-form textarea {
+    width: 100%;
+
+    padding: 13px;
+
+    border: 1px solid #d1d5db;
+    border-radius: 9px;
+
+    font-size: 15px;
+
+    outline: none;
+}
+
+.note-form input:focus,
+.note-form textarea:focus {
+    border-color: #1976e9;
+
+    box-shadow:
+        0 0 0 3px
+        rgba(25, 118, 233, 0.1);
+}
+
+.note-form textarea {
+    min-height: 120px;
+    resize: vertical;
+}
+
+.save-note-button,
+.note-form button {
+    align-self: flex-start;
+
+    border: none;
+
+    padding: 11px 22px;
+
+    border-radius: 8px;
+
+    background-color: #1976e9;
+    color: white;
+
+    font-weight: bold;
+
+    cursor: pointer;
+}
+
+.save-note-button:hover,
+.note-form button:hover {
+    background-color: #125fc0;
+}
+
+
+/* NOTES SECTION */
+
+.notes-section {
+    margin-top: 20px;
+}
+
+.notes-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(
+            auto-fit,
+            minmax(240px, 1fr)
+        );
+
+    gap: 22px;
+}
+
+
+/* STICKY NOTE */
+
+.sticky-note {
+    min-height: 250px;
+
+    background-color: #fff7b2;
+
+    padding: 22px;
+
+    border-radius: 12px;
+
+    box-shadow:
+        0 8px 20px
+        rgba(0, 0, 0, 0.08);
+
+    display: flex;
+    flex-direction: column;
+
+    transition:
+        transform 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+.sticky-note:hover {
+    transform: translateY(-4px);
+
+    box-shadow:
+        0 12px 28px
+        rgba(0, 0, 0, 0.12);
+}
+
+.note-top h3,
+.sticky-note h3 {
+    color: #292524;
+
+    margin-bottom: 14px;
+
+    font-size: 18px;
+}
+
+.note-content,
+.sticky-note p {
+    flex: 1;
+
+    color: #44403c;
+
+    line-height: 1.6;
+
+    margin-bottom: 20px;
+
+    white-space: pre-wrap;
+}
+
+.note-footer {
+    border-top:
+        1px solid
+        rgba(0, 0, 0, 0.08);
+
+    padding-top: 12px;
+}
+
+.note-footer small,
+.sticky-note small {
+    display: block;
+
+    color: #78716c;
+
+    margin-bottom: 12px;
+
+    font-size: 11px;
+}
+
+
+/* NOTE ACTIONS */
+
+.note-actions {
+    display: flex;
+    align-items: center;
+
+    gap: 8px;
+}
+
+.edit-button {
+    padding: 8px 13px;
+
+    border-radius: 7px;
+
+    background-color: #2563eb;
+    color: white;
+
+    font-size: 13px;
+}
+
+.delete-button {
+    padding: 8px 13px;
+
+    border: none;
+    border-radius: 7px;
+
+    background-color: #ef4444;
+    color: white;
+
+    font-size: 13px;
+
+    cursor: pointer;
+}
+
+.delete-button:hover {
+    background-color: #dc2626;
+}
+
+
+/* EMPTY NOTES */
+
+.empty-notes {
+    grid-column: 1 / -1;
+
+    background-color: white;
+
+    text-align: center;
+
+    padding: 50px 20px;
+
+    border-radius: 14px;
+
+    color: #6b7280;
+
+    box-shadow:
+        0 5px 18px
+        rgba(0, 0, 0, 0.05);
+}
+
+.empty-notes h3 {
+    color: #374151;
+    margin-bottom: 8px;
+}
+
+
+/* ==================================================
+   EDIT NOTE PAGE
+================================================== */
+
+.edit-note-page {
+    min-height: 100vh;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    padding: 30px;
+
+    background-color: #f5f7fb;
+}
+
+.edit-note-card {
+    width: 100%;
+    max-width: 560px;
+
+    background-color: white;
+
+    padding: 35px;
+
+    border-radius: 14px;
+
+    box-shadow:
+        0 10px 30px
+        rgba(0, 0, 0, 0.08);
+}
+
+.edit-note-card h1 {
+    margin-bottom: 25px;
+}
+
+.edit-note-card input,
+.edit-note-card textarea {
+    width: 100%;
+
+    padding: 12px;
+
+    margin-bottom: 15px;
+
+    border: 1px solid #d1d5db;
+
+    border-radius: 8px;
+
+    font-size: 15px;
+
+    outline: none;
+}
+
+.edit-note-card input:focus,
+.edit-note-card textarea:focus {
+    border-color: #1976e9;
+
+    box-shadow:
+        0 0 0 3px
+        rgba(25, 118, 233, 0.1);
+}
+
+.edit-note-card textarea {
+    min-height: 160px;
+    resize: vertical;
+}
+
+.save-edit-button {
+    padding: 10px 20px;
+
+    border: none;
+    border-radius: 8px;
+
+    background-color: #1976e9;
+    color: white;
+
+    cursor: pointer;
+
+    font-weight: bold;
+}
+
+.cancel-link {
+    display: inline-block;
+
+    margin-top: 16px;
+
+    color: #6b7280;
+}
+
+
+/* ==================================================
+   RESPONSIVE DESIGN
+================================================== */
+
+@media (max-width: 850px) {
+
+    .illustration-section {
+        display: none;
+    }
+
+    .login-section {
+        width: 100%;
+        border-radius: 0;
+    }
+
+    .login-card {
+        width: 90%;
+        max-width: 390px;
+    }
+}
+
+
+@media (max-width: 700px) {
+
+    .dashboard-header {
+        flex-direction: column;
+
+        align-items: flex-start;
+
+        gap: 18px;
+
+        padding: 22px;
+    }
+
+    .header-actions {
+        width: 100%;
+
+        justify-content: space-between;
+    }
+
+    .dashboard-content {
+        padding: 25px 18px;
+    }
+}
+
+/* ==========================================
+   JWT LOGIN SECTION
+========================================== */
+
+.jwt-section {
+    margin-top: 28px;
+}
+
+.auth-divider {
+    display: flex;
+    align-items: center;
+    text-align: center;
+
+    margin: 25px 0;
+    color: #9ca3af;
+}
+
+.auth-divider::before,
+.auth-divider::after {
+    content: "";
+
+    flex: 1;
+
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.auth-divider span {
+    padding: 0 12px;
+
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.jwt-section h3 {
+    color: #374151;
+
+    margin-bottom: 8px;
+
+    font-size: 16px;
+}
+
+.jwt-description {
+    color: #6b7280;
+
+    font-size: 13px;
+
+    line-height: 1.5;
+
+    margin-bottom: 15px;
+}
+
+.jwt-form textarea {
+    width: 100%;
+
+    min-height: 90px;
+
+    padding: 12px;
+
+    border: 1px solid #d1d5db;
+
+    border-radius: 10px;
+
+    resize: vertical;
+
+    outline: none;
+
+    font-size: 12px;
+
+    margin-bottom: 12px;
+}
+
+.jwt-form textarea:focus {
+    border-color: #1976e9;
+
+    box-shadow:
+        0 0 0 3px
+        rgba(25, 118, 233, 0.1);
+}
+
+.jwt-login-button {
+    width: 100%;
+
+    padding: 12px;
+
+    border: none;
+
+    border-radius: 10px;
+
+    background-color: #111827;
+
+    color: white;
+
+    font-weight: bold;
+
+    cursor: pointer;
+}
+
+.jwt-login-button:hover {
+    background-color: #000000;
+}
+@media (max-width: 500px) {
+
+    .login-card {
+        padding: 30px 24px;
+    }
+
+    .input-group {
+        height: 54px;
+    }
+
+    .dashboard-title h1 {
+        font-size: 23px;
+    }
+}
+
+/* ==========================================
+   SECURE LOGIN CHECKBOX
+========================================== */
+
+.secure-login-option {
+    margin: 8px 0 20px;
+}
+
+.secure-login-option label {
+    display: flex;
+    align-items: center;
+
+    gap: 8px;
+
+    color: #374151;
+
+    font-size: 14px;
+
+    font-weight: 500;
+
+    cursor: pointer;
+}
+
+.secure-login-option input {
+    width: 16px;
+    height: 16px;
+
+    cursor: pointer;
+}
+
+.secure-login-option small {
+    display: block;
+
+    margin-left: 24px;
+    margin-top: 5px;
+
+    color: #9ca3af;
+
+    font-size: 11px;
+}

@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>
+        Student Portal Login
+    </title>
+
+    <link
+        rel="stylesheet"
+        href="/static/style.css"
+    >
+</head>
+
+
+<body>
+
+    <div class="login-page">
+
+
+        <!-- =========================================
+             LEFT SIDE
+        ========================================== -->
+
+        <div class="illustration-section">
+
+            <div class="illustration-box">
+
+                <div class="illustration-circle">
+                    🎓
+                </div>
+
+                <h2>
+                    Student Success Portal
+                </h2>
+
+                <p>
+                    Access your academic dashboard,
+                    study notes, progress,
+                    and personalized student resources.
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <!-- =========================================
+             RIGHT SIDE
+        ========================================== -->
+
+        <div class="login-section">
+
+            <div class="login-card">
+
+
+                <!-- TITLE -->
+
+                <h1>
+                    Hello!
+                </h1>
+
+                <p class="login-subtitle">
+                    Sign in to access your student portal
+                </p>
+
+
+                <!-- SUCCESS MESSAGE -->
+
+                {% if success %}
+
+                    <div class="success-message">
+                        {{ success }}
+                    </div>
+
+                {% endif %}
+
+
+                <!-- ERROR MESSAGE -->
+
+                {% if error %}
+
+                    <div class="error-message">
+                        {{ error }}
+                    </div>
+
+                {% endif %}
+
+
+                <!-- =================================
+                     LOGIN FORM
+                ================================== -->
+
+                <form
+                    action="/login"
+                    method="post"
+                >
+
+
+                    <!-- USERNAME -->
+
+                    <div class="input-group">
+
+                        <span class="input-icon">
+                            👤
+                        </span>
+
+                        <input
+                            type="text"
+                            name="username"
+                            placeholder="Username"
+                            required
+                        >
+
+                    </div>
+
+
+                    <!-- PASSWORD -->
+
+                    <div class="input-group">
+
+                        <span class="input-icon">
+                            🔒
+                        </span>
+
+                        <input
+                            type="password"
+                            name="password"
+                            placeholder="Password"
+                            required
+                        >
+
+                    </div>
+
+
+                    <!-- =================================
+                         SECURE JWT LOGIN OPTION
+                    ================================== -->
+
+                    <div class="secure-login-option">
+
+                        <label>
+
+                            <input
+                                type="checkbox"
+                                name="secure_login"
+                            >
+
+                            <span>
+                                🛡️ Secure Login
+                            </span>
+
+                        </label>
+
+                        <small>
+                            Use JWT authentication
+                        </small>
+
+                    </div>
+
+
+                    <!-- LOGIN BUTTON -->
+
+                    <button
+                        type="submit"
+                        class="login-button"
+                    >
+                        🔐 Login
+                    </button>
+
+
+                </form>
+
+
+                <!-- FORGOT PASSWORD -->
+
+                <a
+                    href="#"
+                    class="forgot-password"
+                >
+                    Forgot Password?
+                </a>
+
+
+                <!-- REGISTER -->
+
+                <div class="register-link">
+
+                    Don't have an account?
+
+                    <a href="/register">
+                        Register
+                    </a>
+
+                </div>
+
+
+            </div>
+
+        </div>
+
+    </div>
+
+</body>
+
+</html>

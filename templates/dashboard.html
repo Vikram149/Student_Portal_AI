@@ -1,0 +1,760 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Student Notes Dashboard</title>
+
+    <!-- Original portal styles -->
+    <link
+        rel="stylesheet"
+        href="/static/style.css"
+    >
+
+    <!-- Note-sharing styles -->
+    <link
+        rel="stylesheet"
+        href="/static/note_sharing.css?v=1"
+    >
+
+    <style>
+        /* Two independently scrollable work areas */
+
+        .portal-workspace {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr);
+            height: 100vh;
+            height: 100dvh;
+            overflow: hidden;
+        }
+
+        .portal-workspace.chat-open {
+            grid-template-columns:
+                minmax(0, 1fr)
+                minmax(0, 1fr);
+        }
+
+        .portal-workspace > .dashboard-page {
+            width: auto;
+            min-width: 0;
+            min-height: 0;
+            height: 100%;
+            overflow-y: auto;
+        }
+
+        .portal-workspace.chat-open .dashboard-header {
+            padding: 22px;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+
+        .portal-workspace.chat-open .header-actions {
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .portal-workspace.chat-open .dashboard-content {
+            padding: 24px 18px;
+        }
+
+        .portal-workspace.chat-open .notes-grid {
+            grid-template-columns:
+                repeat(
+                    auto-fit,
+                    minmax(min(240px, 100%), 1fr)
+                );
+        }
+
+        /* Chatbot panel */
+
+        #assistant-panel {
+            display: flex;
+            flex-direction: column;
+            min-width: 0;
+            min-height: 0;
+            height: 100%;
+            background: white;
+            border-left: 2px solid #cbd5e1;
+        }
+
+        #assistant-panel[hidden],
+        #open-assistant[hidden] {
+            display: none;
+        }
+
+        .assistant-toolbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            flex-shrink: 0;
+            padding: 14px 18px;
+            background: #16324f;
+            color: white;
+        }
+
+        .assistant-toolbar h2 {
+            margin: 0;
+            font-size: 18px;
+        }
+
+        #close-assistant {
+            width: 38px;
+            height: 38px;
+            border: 1px solid #94a3b8;
+            border-radius: 8px;
+            background: transparent;
+            color: white;
+            font-size: 20px;
+            cursor: pointer;
+        }
+
+        #assistant-frame {
+            display: block;
+            flex: 1;
+            min-height: 0;
+            width: 100%;
+            border: none;
+            background: white;
+        }
+
+        #open-assistant {
+            position: fixed;
+            right: 24px;
+            bottom: 24px;
+            z-index: 100;
+            padding: 15px 22px;
+            border: none;
+            border-radius: 30px;
+            background: #16324f;
+            color: white;
+            font: inherit;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow:
+                0 6px 22px rgba(15, 23, 42, 0.25);
+        }
+
+        #open-assistant:hover,
+        #close-assistant:hover {
+            background: #28577d;
+        }
+
+        #open-assistant:focus-visible,
+        #close-assistant:focus-visible {
+            outline: 3px solid #60a5fa;
+            outline-offset: 3px;
+        }
+
+        /*
+         * On very narrow screens, keep both work areas
+         * side by side.
+         */
+        @media (max-width: 900px) {
+            .portal-workspace.chat-open {
+                min-width: 900px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div
+        id="portal-workspace"
+        class="portal-workspace"
+    >
+
+        <!-- =========================================
+             LEFT SIDE: STUDENT NOTES PORTAL
+        ========================================== -->
+
+        <div class="dashboard-page">
+
+            <!-- HEADER -->
+
+            <header class="dashboard-header">
+
+                <div class="dashboard-title">
+
+                    <h1>
+                        Student Notes Pad
+                    </h1>
+
+                    <p>
+                        Welcome back, {{ user.username }}
+                    </p>
+
+                </div>
+
+
+                <div class="header-actions">
+
+                    <div class="note-count">
+                        📝 {{ notes | length }} Notes
+                    </div>
+
+
+                    <form
+                        action="/logout"
+                        method="post"
+                    >
+
+                        <button
+                            type="submit"
+                            class="logout-button"
+                        >
+                            🚪 Logout
+                        </button>
+
+                    </form>
+
+                </div>
+
+            </header>
+
+
+            <!-- MAIN CONTENT -->
+
+            <main class="dashboard-content">
+
+
+                <!-- CREATE NOTE -->
+
+                <section class="note-form-section">
+
+                    <div class="section-header">
+
+                        <h2>
+                            📚 Create a Study Note
+                        </h2>
+
+                        <p>
+                            Save lessons, reminders, ideas,
+                            or revision points.
+                        </p>
+
+                    </div>
+
+
+                    <form
+                        action="/add-note"
+                        method="post"
+                        class="note-form"
+                    >
+
+                        <input
+                            type="text"
+                            name="title"
+                            placeholder="Enter note title"
+                            required
+                        >
+
+
+                        <textarea
+                            name="content"
+                            placeholder="Write your note here..."
+                            required
+                        ></textarea>
+
+
+                        <button
+                            type="submit"
+                            class="save-note-button"
+                        >
+                            💾 Save Note
+                        </button>
+
+                    </form>
+
+                </section>
+
+
+                <!-- SAVED NOTES -->
+
+                <section class="notes-section">
+
+                    <div class="section-header">
+
+                        <h2>
+                            📒 My Study Notes
+                        </h2>
+
+                        <p>
+                            Your saved academic notes are stored
+                            securely in your account.
+                        </p>
+
+                    </div>
+
+
+                    <!-- Sharing success message -->
+
+                    <p
+                        id="note-sharing-feedback"
+                        class="note-sharing-feedback"
+                        role="status"
+                        aria-live="polite"
+                    ></p>
+
+
+                    <div class="notes-grid">
+
+                        {% for note in notes %}
+
+                        <div class="sticky-note">
+
+                            <!-- NOTE TITLE -->
+
+                            <div class="note-top">
+
+                                <h3>
+                                    {{ note.title }}
+                                </h3>
+
+                            </div>
+
+
+                            <!-- CURRENT SHARING STATUS -->
+
+                            <span
+    class="note-sharing-badge"
+    id="note-sharing-status-{{ note.id }}"
+
+    {% if note.sharing_mode == "all_students" %}
+        title="Shared with all students"
+        aria-label="Shared with all students"
+    {% elif note.sharing_mode == "selected_students" %}
+        title="Shared with selected students"
+        aria-label="Shared with selected students"
+    {% else %}
+        title="Private"
+        aria-label="Private"
+    {% endif %}
+>
+    {% if note.sharing_mode == "all_students" %}
+        🌐
+    {% elif note.sharing_mode == "selected_students" %}
+        👥
+    {% else %}
+        🔒
+    {% endif %}
+</span>
+
+
+                            <!-- NOTE CONTENT -->
+
+                            <p class="note-content">
+                                {{ note.content }}
+                            </p>
+
+
+                            <!-- NOTE FOOTER -->
+
+                            <div class="note-footer">
+
+                                <small>
+                                    🕒 {{ note.created_at }}
+                                </small>
+
+
+                                <div class="note-actions">
+
+                                    <!-- EDIT BUTTON -->
+
+                                    <a
+                                        href="/edit-note/{{ note.id }}"
+                                        class="edit-button"
+                                    >
+                                        ✏️ Edit
+                                    </a>
+
+
+                                    <!-- DELETE BUTTON -->
+
+                                    <form
+                                        action="/delete-note/{{ note.id }}"
+                                        method="post"
+                                        onsubmit="return confirm('Delete this note?');"
+                                    >
+
+                                        <button
+                                            type="submit"
+                                            class="delete-button"
+                                        >
+                                            🗑️ Delete
+                                        </button>
+
+                                    </form>
+
+
+                                    <!-- SHARE BUTTON -->
+
+                                    <button
+                                        type="button"
+                                        class="note-share-button"
+                                        data-note-id="{{ note.id }}"
+                                        aria-haspopup="dialog"
+                                        aria-controls="note-sharing-dialog"
+                                    >
+                                        ↗ Share
+                                    </button>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+
+                        {% else %}
+
+                        <!-- NO NOTES -->
+
+                        <div class="empty-notes">
+
+                            <h3>
+                                🗒️ No notes yet
+                            </h3>
+
+                            <p>
+                                Create your first study note above.
+                            </p>
+
+                        </div>
+
+                        {% endfor %}
+
+                    </div>
+
+                </section>
+
+            </main>
+
+        </div>
+
+
+        <!-- =========================================
+             RIGHT SIDE: CHATBOT
+        ========================================== -->
+
+        <section
+            id="assistant-panel"
+            aria-label="Student chatbot"
+            hidden
+        >
+
+            <header class="assistant-toolbar">
+
+                <h2>
+                    Study Assistant
+                </h2>
+
+
+                <button
+                    id="close-assistant"
+                    type="button"
+                    aria-label="Close chatbot"
+                >
+                    ✕
+                </button>
+
+            </header>
+
+
+            <iframe
+                id="assistant-frame"
+                title="Student chatbot"
+            ></iframe>
+
+        </section>
+
+    </div>
+
+
+    <!-- OPEN CHATBOT BUTTON -->
+
+    <button
+        id="open-assistant"
+        type="button"
+        aria-controls="assistant-panel"
+        aria-expanded="false"
+    >
+        💬 Ask Claude
+    </button>
+
+
+    <!-- =============================================
+         NOTE-SHARING DIALOG
+    ============================================== -->
+
+    <dialog
+        id="note-sharing-dialog"
+        aria-labelledby="sharing-heading"
+        aria-describedby="sharing-intro"
+    >
+
+        <form id="note-sharing-form">
+
+            <!-- DIALOG HEADER -->
+
+            <header class="sharing-dialog-header">
+
+                <h2 id="sharing-heading">
+                    Share note
+                </h2>
+
+
+                <button
+                    id="sharing-close"
+                    class="sharing-secondary"
+                    type="button"
+                    aria-label="Close sharing dialog"
+                    autofocus
+                >
+                    ✕
+                </button>
+
+            </header>
+
+
+            <!-- NOTE TITLE -->
+
+            <p
+                id="sharing-note-title"
+                class="sharing-note-title"
+            ></p>
+
+
+            <!-- EXPLANATION -->
+
+            <p id="sharing-intro">
+                Choose who can read this note and use it
+                with the study assistant. Only you can edit
+                or delete it.
+            </p>
+
+
+            <!-- DIALOG STATUS OR ERROR -->
+
+            <p
+                id="sharing-message"
+                role="status"
+                aria-live="polite"
+            ></p>
+
+
+            <!-- SHARING CONTROLS -->
+
+            <fieldset
+                id="sharing-controls"
+                disabled
+            >
+
+                <legend>
+                    Who can access this note?
+                </legend>
+
+
+                <label for="sharing-mode">
+                    Sharing setting
+                </label>
+
+
+                <select
+                    id="sharing-mode"
+                    name="sharing_mode"
+                >
+
+                    <option value="private">
+                        Private — only me
+                    </option>
+
+                    <option value="all_students">
+                        All students
+                    </option>
+
+                    <option value="selected_students">
+                        Selected students
+                    </option>
+
+                </select>
+
+
+                <!-- SELECTED-STUDENT CONTROLS -->
+
+                <section
+                    id="sharing-students"
+                    hidden
+                >
+
+                    <h3>
+                        Selected students
+                    </h3>
+
+
+                    <p id="sharing-selection-count"></p>
+
+
+                    <!-- Currently selected students -->
+
+                    <div id="sharing-selected"></div>
+
+
+                    <!-- Student search -->
+
+                    <label for="sharing-search">
+                        Find a student by username
+                    </label>
+
+
+                    <input
+                        id="sharing-search"
+                        type="search"
+                        minlength="2"
+                        maxlength="100"
+                        autocomplete="off"
+                        placeholder="Type at least 2 characters"
+                        aria-describedby="sharing-search-status"
+                    >
+
+
+                    <p
+                        id="sharing-search-status"
+                        role="status"
+                        aria-live="polite"
+                    ></p>
+
+
+                    <!-- Search results -->
+
+                    <div id="sharing-results"></div>
+
+                </section>
+
+
+                <p class="sharing-help">
+                    Making this note private stops future
+                    shared-note retrieval. Answers already
+                    saved in another student's chat remain there.
+                </p>
+
+            </fieldset>
+
+
+            <!-- DIALOG BUTTONS -->
+
+            <footer class="sharing-dialog-footer">
+
+                <button
+                    id="sharing-cancel"
+                    type="button"
+                    class="sharing-secondary"
+                >
+                    Cancel
+                </button>
+
+
+                <button
+                    id="sharing-save"
+                    type="submit"
+                    disabled
+                >
+                    Save changes
+                </button>
+
+            </footer>
+
+        </form>
+
+    </dialog>
+
+
+    <!-- =============================================
+         SPLIT-SCREEN CHATBOT JAVASCRIPT
+    ============================================== -->
+
+    <script>
+        const workspace =
+            document.getElementById("portal-workspace");
+
+        const panel =
+            document.getElementById("assistant-panel");
+
+        const frame =
+            document.getElementById("assistant-frame");
+
+        const openButton =
+            document.getElementById("open-assistant");
+
+        const closeButton =
+            document.getElementById("close-assistant");
+
+
+        function openChat() {
+
+            if (!frame.getAttribute("src")) {
+                frame.src = "/assistant";
+            }
+
+            panel.hidden = false;
+
+            workspace.classList.add("chat-open");
+
+            openButton.hidden = true;
+
+            openButton.setAttribute(
+                "aria-expanded",
+                "true"
+            );
+
+            closeButton.focus();
+        }
+
+
+        function closeChat() {
+
+            panel.hidden = true;
+
+            workspace.classList.remove("chat-open");
+
+            openButton.hidden = false;
+
+            openButton.setAttribute(
+                "aria-expanded",
+                "false"
+            );
+
+            openButton.focus();
+        }
+
+
+        openButton.addEventListener(
+            "click",
+            openChat
+        );
+
+
+        closeButton.addEventListener(
+            "click",
+            closeChat
+        );
+    </script>
+
+
+    <!-- NOTE-SHARING JAVASCRIPT -->
+
+    <script
+        src="/static/note_sharing.js?v=1"
+        defer
+    ></script>
+
+</body>
+
+</html>

@@ -1,0 +1,151 @@
+/* Chatbot launcher */
+#open-assistant {
+    position: fixed;
+    right: 24px;
+    bottom: 24px;
+    z-index: 100;
+
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+
+    padding: 15px 22px;
+    border: none;
+    border-radius: 30px;
+
+    background: #16324f;
+    color: #ffffff;
+    font: inherit;
+    font-weight: bold;
+    cursor: pointer;
+
+    box-shadow: 0 6px 22px rgba(15, 23, 42, 0.25);
+}
+
+#open-assistant:hover {
+    background: #23527a;
+}
+
+#open-assistant[hidden],
+#assistant-panel[hidden] {
+    display: none;
+}
+
+/* Full-width portal when chat is closed */
+.dashboard-page {
+    width: 100%;
+}
+
+/* Notes occupy the left half while chat is open */
+body.assistant-open .dashboard-page {
+    width: 50%;
+}
+
+/* Adapt the notes header to its narrower space */
+body.assistant-open .dashboard-header {
+    flex-wrap: wrap;
+    gap: 16px;
+    padding: 24px;
+}
+
+body.assistant-open .header-actions {
+    flex-wrap: wrap;
+}
+
+body.assistant-open .dashboard-content {
+    padding: 24px 18px;
+}
+
+body.assistant-open .notes-grid {
+    grid-template-columns:
+        repeat(auto-fit, minmax(min(240px, 100%), 1fr));
+}
+
+/* Fixed right half of the screen */
+#assistant-panel {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: 50%;
+    z-index: 200;
+
+    display: flex;
+    flex-direction: column;
+
+    background: #ffffff;
+    border-left: 1px solid #cbd5e1;
+    box-shadow: -5px 0 20px rgba(15, 23, 42, 0.08);
+}
+
+.assistant-panel-header {
+    flex-shrink: 0;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+
+    padding: 14px 18px;
+    background: #16324f;
+    color: #ffffff;
+}
+
+.assistant-panel-header h2 {
+    margin: 0;
+    font-size: 18px;
+}
+
+.assistant-panel-header p {
+    margin: 4px 0 0;
+    font-size: 12px;
+    color: #dbeafe;
+}
+
+#close-assistant {
+    flex-shrink: 0;
+    width: 38px;
+    height: 38px;
+
+    border: 1px solid #64748b;
+    border-radius: 8px;
+
+    background: transparent;
+    color: #ffffff;
+    font-size: 20px;
+    cursor: pointer;
+}
+
+#close-assistant:hover {
+    background: #294a6b;
+}
+
+#open-assistant:focus-visible,
+#close-assistant:focus-visible {
+    outline: 3px solid #60a5fa;
+    outline-offset: 3px;
+}
+
+#assistant-frame {
+    flex: 1;
+    min-height: 0;
+    width: 100%;
+    border: 0;
+    background: #ffffff;
+}
+
+/* On small screens, chat overlays the dashboard */
+@media (max-width: 850px) {
+    body.assistant-open .dashboard-page {
+        width: 100%;
+    }
+
+    #assistant-panel {
+        width: 100%;
+    }
+
+    #open-assistant {
+        right: 16px;
+        bottom: 16px;
+    }
+}

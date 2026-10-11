@@ -1,0 +1,449 @@
+/*
+==================================================
+NOTE SHARING
+==================================================
+These styles apply only to the note-sharing
+button, status label, and sharing dialog.
+*/
+
+
+/* ------------------------------------------------
+   NOTE ACTION BUTTONS
+------------------------------------------------- */
+
+.note-actions {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+
+/* ------------------------------------------------
+   SHARE BUTTON
+------------------------------------------------- */
+
+.note-share-button {
+    padding: 10px 14px;
+
+    border: none;
+    border-radius: 8px;
+
+    background: #16324f;
+    color: white;
+
+    font: inherit;
+    font-weight: 600;
+
+    cursor: pointer;
+}
+
+
+.note-share-button:hover {
+    background: #28577d;
+}
+
+
+.note-share-button:focus-visible {
+    outline: 3px solid #60a5fa;
+    outline-offset: 3px;
+}
+
+
+/* ------------------------------------------------
+   CURRENT SHARING STATUS
+------------------------------------------------- */
+
+/* Allow the sharing symbol to sit inside the note corner */
+
+.sticky-note {
+    position: relative;
+}
+
+
+/* Prevent the note title from touching the symbol */
+
+.sticky-note .note-top {
+    padding-right: 38px;
+}
+
+
+/* Small sharing-status symbol */
+
+.note-sharing-badge {
+    position: absolute;
+
+    top: 14px;
+    right: 14px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 30px;
+    height: 30px;
+
+    margin: 0;
+    padding: 0;
+
+    border: 1px solid rgba(22, 50, 79, 0.18);
+    border-radius: 50%;
+
+    background: rgba(255, 255, 255, 0.65);
+
+    font-size: 15px;
+    line-height: 1;
+
+    cursor: help;
+}
+
+
+/* ------------------------------------------------
+   DASHBOARD SUCCESS MESSAGE
+------------------------------------------------- */
+
+.note-sharing-feedback {
+    margin: 12px 0;
+
+    color: #14532d;
+    font-weight: 600;
+}
+
+
+.note-sharing-feedback:empty {
+    display: none;
+}
+
+
+/* ------------------------------------------------
+   SHARING DIALOG
+------------------------------------------------- */
+
+#note-sharing-dialog {
+    box-sizing: border-box;
+
+    width: min(560px, calc(100vw - 32px));
+    max-height: calc(100dvh - 40px);
+
+    padding: 24px;
+    margin: auto;
+
+    overflow-y: auto;
+
+    border: 1px solid #cbd5e1;
+    border-radius: 16px;
+
+    background: white;
+    color: #172b41;
+
+    font-family: inherit;
+
+    box-shadow:
+        0 18px 60px rgba(15, 23, 42, 0.25);
+}
+
+
+/* Dark background behind the dialog */
+
+#note-sharing-dialog::backdrop {
+    background: rgba(15, 23, 42, 0.5);
+}
+
+
+/* Make the HTML hidden attribute work */
+
+#note-sharing-dialog [hidden] {
+    display: none !important;
+}
+
+
+#note-sharing-dialog form {
+    display: block;
+    margin: 0;
+}
+
+
+/* ------------------------------------------------
+   DIALOG HEADER
+------------------------------------------------- */
+
+#note-sharing-dialog .sharing-dialog-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 16px;
+}
+
+
+#note-sharing-dialog h2 {
+    margin: 0;
+
+    font-size: 22px;
+}
+
+
+#note-sharing-dialog h3 {
+    margin: 18px 0 8px;
+
+    font-size: 16px;
+}
+
+
+/* ------------------------------------------------
+   DIALOG TEXT
+------------------------------------------------- */
+
+#note-sharing-dialog p {
+    margin: 10px 0;
+
+    line-height: 1.5;
+}
+
+
+#note-sharing-dialog .sharing-note-title {
+    font-weight: 700;
+
+    overflow-wrap: anywhere;
+}
+
+
+#note-sharing-dialog #sharing-intro,
+#note-sharing-dialog .sharing-help {
+    color: #526174;
+
+    font-size: 14px;
+}
+
+
+/* ------------------------------------------------
+   SHARING CONTROLS
+------------------------------------------------- */
+
+#note-sharing-dialog fieldset {
+    min-width: 0;
+
+    margin: 18px 0 0;
+    padding: 0;
+
+    border: none;
+}
+
+
+#note-sharing-dialog legend {
+    margin-bottom: 12px;
+
+    font-weight: 700;
+}
+
+
+#note-sharing-dialog label {
+    display: block;
+
+    margin: 10px 0 7px;
+
+    font-size: 14px;
+}
+
+
+/* Dropdown and username search */
+
+#note-sharing-dialog select,
+#note-sharing-dialog input[type="search"] {
+    box-sizing: border-box;
+
+    display: block;
+
+    width: 100%;
+
+    margin: 0;
+    padding: 11px 12px;
+
+    border: 1px solid #94a3b8;
+    border-radius: 8px;
+
+    background: white;
+    color: #172b41;
+
+    font: inherit;
+}
+
+
+/* ------------------------------------------------
+   SELECTED STUDENTS
+------------------------------------------------- */
+
+#sharing-selected {
+    display: flex;
+    flex-wrap: wrap;
+
+    gap: 8px;
+
+    max-height: 160px;
+
+    overflow-y: auto;
+}
+
+
+/*
+Each selected student appears as a removable
+button, for example: Test1 ×
+*/
+
+#note-sharing-dialog #sharing-selected button {
+    padding: 7px 10px;
+
+    border-color: #cbd5e1;
+
+    background: #eaf2fa;
+    color: #16324f;
+
+    font-size: 13px;
+
+    overflow-wrap: anywhere;
+}
+
+
+/* ------------------------------------------------
+   STUDENT SEARCH RESULTS
+------------------------------------------------- */
+
+#sharing-results {
+    max-height: 190px;
+
+    overflow-y: auto;
+}
+
+
+#note-sharing-dialog .sharing-result {
+    display: flex;
+    align-items: center;
+
+    gap: 10px;
+
+    margin: 0;
+    padding: 10px 8px;
+
+    border-bottom: 1px solid #e2e8f0;
+
+    overflow-wrap: anywhere;
+}
+
+
+#note-sharing-dialog input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+
+    flex: 0 0 auto;
+
+    margin: 0;
+    padding: 0;
+}
+
+
+/* ------------------------------------------------
+   DIALOG BUTTONS
+------------------------------------------------- */
+
+#note-sharing-dialog button {
+    width: auto;
+
+    margin: 0;
+    padding: 10px 14px;
+
+    border: 1px solid #16324f;
+    border-radius: 8px;
+
+    background: #16324f;
+    color: white;
+
+    font: inherit;
+    font-weight: 600;
+
+    cursor: pointer;
+}
+
+
+/* Cancel and close buttons */
+
+#note-sharing-dialog button.sharing-secondary {
+    border-color: #94a3b8;
+
+    background: white;
+    color: #16324f;
+}
+
+
+#note-sharing-dialog button:hover:not(:disabled) {
+    filter: brightness(0.92);
+}
+
+
+#note-sharing-dialog button:disabled {
+    opacity: 0.55;
+
+    cursor: not-allowed;
+}
+
+
+/* ------------------------------------------------
+   DIALOG FOOTER
+------------------------------------------------- */
+
+#note-sharing-dialog .sharing-dialog-footer {
+    display: flex;
+    justify-content: flex-end;
+
+    gap: 10px;
+
+    margin-top: 20px;
+    padding-top: 16px;
+
+    border-top: 1px solid #e2e8f0;
+}
+
+
+/* ------------------------------------------------
+   ERROR MESSAGE
+------------------------------------------------- */
+
+#note-sharing-dialog .sharing-error {
+    color: #b91c1c;
+
+    font-weight: 600;
+}
+
+
+/* ------------------------------------------------
+   KEYBOARD FOCUS
+------------------------------------------------- */
+
+#note-sharing-dialog :focus-visible {
+    outline: 3px solid #60a5fa;
+    outline-offset: 3px;
+}
+
+
+/* ------------------------------------------------
+   SMALL SCREENS
+------------------------------------------------- */
+
+@media (max-width: 600px) {
+
+    #note-sharing-dialog {
+        width: calc(100vw - 20px);
+        max-height: calc(100dvh - 20px);
+
+        padding: 18px;
+    }
+
+
+    #note-sharing-dialog .sharing-dialog-footer {
+        flex-direction: column-reverse;
+    }
+
+
+    #note-sharing-dialog .sharing-dialog-footer button {
+        width: 100%;
+    }
+}

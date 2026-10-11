@@ -1,0 +1,1519 @@
+/* Include padding and borders in element sizes */
+* {
+    box-sizing: border-box;
+}
+
+/* Page background and default font */
+body {
+    margin: 0;
+    min-height: 100vh;
+    padding: 24px;
+
+    font-family: Arial, sans-serif;
+    color: #1e293b;
+    background: #eef2f7;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Main chatbot panel */
+.chat-container {
+    width: 100%;
+    max-width: 800px;
+
+    background: #ffffff;
+    border-radius: 18px;
+    overflow: hidden;
+
+    box-shadow: 0 12px 35px rgba(15, 23, 42, 0.1);
+}
+
+/* Heading area */
+.chat-header {
+    padding: 24px;
+    background: #16324f;
+    color: #ffffff;
+}
+
+.chat-header h1 {
+    margin: 0 0 8px;
+    font-size: 28px;
+}
+
+.chat-header p {
+    margin: 0 0 18px;
+    color: #dbeafe;
+}
+
+/* Shared button appearance */
+button {
+    padding: 11px 18px;
+    border: none;
+    border-radius: 8px;
+
+    font: inherit;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+#clear-chat {
+    background: #ffffff;
+    color: #16324f;
+}
+
+#clear-chat:hover {
+    background: #dbeafe;
+}
+
+/* Scrollable conversation area */
+.chat-messages {
+    height: 380px;
+    padding: 24px;
+    overflow-y: auto;
+
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+/* Shared message bubble appearance */
+.message {
+    max-width: 85%;
+    padding: 14px 18px;
+    border-radius: 14px;
+
+    line-height: 1.6;
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+}
+
+.message p {
+    margin: 0;
+    white-space: normal;
+}
+
+/* Claude's messages appear on the left */
+.message.assistant {
+    align-self: flex-start;
+    background: #f1f5f9;
+    color: #1e293b;
+}
+
+/* Your messages appear on the right */
+.message.user {
+    align-self: flex-end;
+    background: #1d4ed8;
+    color: #ffffff;
+}
+
+/* Progress and error text */
+#chat-status {
+    min-height: 24px;
+    margin: 0;
+    padding: 0 24px;
+
+    font-size: 14px;
+    color: #475569;
+}
+
+#chat-status.error {
+    color: #b91c1c;
+}
+
+/* Message input area */
+.chat-form {
+    padding: 16px 24px 20px;
+    border-top: 1px solid #e2e8f0;
+
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.chat-form label {
+    font-size: 14px;
+    font-weight: bold;
+}
+
+#message-input {
+    width: 100%;
+    min-height: 90px;
+    max-height: 220px;
+    padding: 14px;
+
+    border: 1px solid #94a3b8;
+    border-radius: 10px;
+    resize: vertical;
+
+    font: inherit;
+    line-height: 1.5;
+}
+
+#message-input:focus {
+    border-color: #2563eb;
+    outline: 2px solid #bfdbfe;
+}
+
+#send-button {
+    align-self: flex-end;
+    background: #1d4ed8;
+    color: #ffffff;
+}
+
+#send-button:hover {
+    background: #1e40af;
+}
+
+/* Used while waiting for a reply */
+button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+button:focus-visible {
+    outline: 3px solid #60a5fa;
+    outline-offset: 3px;
+}
+
+.chat-disclaimer {
+    margin: 0;
+    padding: 0 24px 20px;
+
+    text-align: center;
+    font-size: 12px;
+    color: #64748b;
+}
+
+/* Adjust the layout for smaller screens */
+@media (max-width: 600px) {
+    body {
+        padding: 12px;
+    }
+
+    .chat-header {
+        padding: 18px;
+    }
+
+    .chat-messages {
+        height: 320px;
+        padding: 16px;
+    }
+
+    .message {
+        max-width: 95%;
+    }
+
+    .chat-form {
+        padding: 16px;
+    }
+}
+/* Align button labels and icons */
+#clear-chat,
+#send-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+
+    transition:
+        background-color 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+#clear-chat span {
+    font-size: 22px;
+    line-height: 1;
+}
+
+#send-button span {
+    font-size: 18px;
+}
+
+#send-button {
+    min-width: 110px;
+}
+
+#send-button:hover:not(:disabled) {
+    box-shadow: 0 4px 12px rgba(29, 78, 216, 0.25);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    #clear-chat,
+    #send-button {
+        transition: none;
+    }
+}
+
+.history-controls {
+    padding: 16px 24px;
+    border-bottom: 1px solid #e2e8f0;
+
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.history-controls label {
+    font-size: 14px;
+    font-weight: bold;
+}
+
+#saved-chats {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #94a3b8;
+    border-radius: 8px;
+
+    background: white;
+    color: #1e293b;
+    font: inherit;
+}
+
+#saved-chats:focus-visible {
+    outline: 2px solid #2563eb;
+    outline-offset: 2px;
+}
+
+/* ==========================================
+   Sidebar and main chat layout
+   ========================================== */
+
+body {
+    display: block;
+    padding: 0;
+    background: #ffffff;
+}
+
+.app-layout {
+    display: flex;
+    height: 100vh;
+    height: 100dvh;
+    overflow: hidden;
+}
+
+/* Left sidebar */
+.chat-sidebar {
+    width: 280px;
+    flex-shrink: 0;
+    min-height: 0;
+    padding: 24px 16px;
+
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+
+    background: #f1f5f9;
+    border-right: 1px solid #e2e8f0;
+}
+
+.sidebar-heading h2 {
+    margin: 0;
+    font-size: 20px;
+    color: #16324f;
+}
+
+.sidebar-heading p {
+    margin: 8px 0 0;
+    font-size: 13px;
+    color: #64748b;
+}
+
+#clear-chat {
+    width: 100%;
+    padding: 12px;
+    background: #ffffff;
+    border: 1px solid #cbd5e1;
+}
+
+#clear-chat:hover:not(:disabled) {
+    background: #e2e8f0;
+}
+
+.history-label {
+    margin-top: 8px;
+    font-size: 12px;
+    font-weight: bold;
+    color: #64748b;
+}
+
+/* Persistent list of saved chats */
+#saved-chats {
+    flex: 1;
+    min-height: 0;
+    width: 100%;
+    padding: 6px;
+
+    border: none;
+    border-radius: 10px;
+
+    background: transparent;
+    color: #1e293b;
+    font: inherit;
+    font-size: 14px;
+}
+
+#saved-chats option {
+    padding: 12px 10px;
+    margin-bottom: 4px;
+    border-radius: 6px;
+}
+
+#saved-chats option:checked {
+    background: #dbeafe;
+    color: #1e3a8a;
+}
+
+#saved-chats:focus-visible {
+    outline: 2px solid #2563eb;
+    outline-offset: 2px;
+}
+
+.sidebar-footer {
+    margin: 0;
+    font-size: 12px;
+    line-height: 1.5;
+    color: #64748b;
+}
+
+/* Main panel fills the remaining space */
+.chat-container {
+    flex: 1;
+    min-width: 0;
+    max-width: none;
+
+    display: flex;
+    flex-direction: column;
+
+    border-radius: 0;
+    box-shadow: none;
+}
+
+.chat-header {
+    padding: 22px 32px;
+    background: #ffffff;
+    color: #16324f;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.chat-header h1 {
+    font-size: 24px;
+}
+
+.chat-header p {
+    margin: 0;
+    color: #64748b;
+}
+
+/* Only the conversation area scrolls */
+.chat-messages {
+    flex: 1;
+    height: auto;
+    min-height: 0;
+    padding: 28px 32px;
+}
+
+.message {
+    max-width: min(85%, 760px);
+}
+
+#chat-status {
+    flex-shrink: 0;
+    padding: 8px 32px;
+}
+
+.chat-form {
+    flex-shrink: 0;
+    padding: 16px 32px;
+}
+
+.chat-disclaimer {
+    flex-shrink: 0;
+    padding-bottom: 16px;
+}
+
+/* On small screens, show history above the chat */
+@media (max-width: 700px) {
+    .app-layout {
+        flex-direction: column;
+    }
+
+    .chat-sidebar {
+        width: 100%;
+        height: 220px;
+        padding: 12px 16px;
+        gap: 8px;
+
+        border-right: none;
+        border-bottom: 1px solid #e2e8f0;
+    }
+
+    .sidebar-heading p,
+    .sidebar-footer {
+        display: none;
+    }
+
+    .sidebar-heading h2 {
+        font-size: 17px;
+    }
+
+    .history-label {
+        margin: 0;
+    }
+
+    .chat-container {
+        min-height: 0;
+    }
+
+    .chat-header {
+        padding: 12px 16px;
+    }
+
+    .chat-header h1 {
+        font-size: 20px;
+    }
+
+    .chat-messages {
+        padding: 16px;
+    }
+
+    .chat-form {
+        padding: 10px 16px;
+    }
+
+    #chat-status {
+        padding: 4px 16px;
+    }
+
+    #message-input {
+        min-height: 60px;
+    }
+
+    .message {
+        max-width: 95%;
+    }
+}
+/* Markdown replies use HTML spacing */
+.message.markdown-content {
+    white-space: normal;
+    min-width: 0;
+}
+
+.markdown-content h1,
+.markdown-content h2,
+.markdown-content h3,
+.markdown-content h4,
+.markdown-content h5,
+.markdown-content h6 {
+    margin: 18px 0 10px;
+    line-height: 1.3;
+    font-weight: 700;
+    color: #16324f;
+}
+
+.markdown-content h1 { font-size: 26px; }
+.markdown-content h2 { font-size: 22px; }
+.markdown-content h3 { font-size: 19px; }
+.markdown-content h4 { font-size: 17px; }
+.markdown-content h5 { font-size: 16px; }
+.markdown-content h6 { font-size: 15px; }
+
+.message.markdown-content p {
+    margin: 0 0 12px;
+}
+
+.markdown-content strong {
+    font-weight: 700;
+}
+
+.markdown-content ul,
+.markdown-content ol {
+    margin: 10px 0;
+    padding-left: 24px;
+}
+
+.markdown-content li {
+    margin-bottom: 6px;
+}
+
+/* Inline code */
+.markdown-content code {
+    padding: 2px 5px;
+    border-radius: 4px;
+    background: #e2e8f0;
+    font-family: Consolas, monospace;
+    font-size: 0.9em;
+}
+
+/* Multiline code blocks */
+.markdown-content pre {
+    max-width: 100%;
+    overflow-x: auto;
+    padding: 16px;
+    border-radius: 10px;
+
+    background: #172033;
+    color: #f8fafc;
+    white-space: pre;
+}
+
+.markdown-content pre code {
+    padding: 0;
+    background: transparent;
+    color: inherit;
+    white-space: inherit;
+}
+
+.markdown-content blockquote {
+    margin: 12px 0;
+    padding: 4px 14px;
+    border-left: 4px solid #60a5fa;
+    color: #475569;
+}
+
+.markdown-content a {
+    color: #1d4ed8;
+    text-decoration: underline;
+}
+
+.markdown-content table {
+    display: block;
+    max-width: 100%;
+    overflow-x: auto;
+    border-collapse: collapse;
+    margin: 12px 0;
+}
+
+.markdown-content th,
+.markdown-content td {
+    padding: 10px;
+    border: 1px solid #cbd5e1;
+    text-align: left;
+}
+
+.markdown-content th {
+    background: #e2e8f0;
+}
+
+.markdown-content hr {
+    margin: 16px 0;
+    border: 0;
+    border-top: 1px solid #cbd5e1;
+}
+
+.message.markdown-content > :first-child {
+    margin-top: 0;
+}
+
+.message.markdown-content > :last-child {
+    margin-bottom: 0;
+}
+
+#delete-chat {
+    flex-shrink: 0;
+    width: 100%;
+    background: #fff1f2;
+    color: #b91c1c;
+    border: 1px solid #fecdd3;
+}
+
+#delete-chat:hover:not(:disabled) {
+    background: #ffe4e6;
+}
+
+/* Allow space for the extra sidebar button on small screens */
+@media (max-width: 700px) {
+    .chat-sidebar {
+        height: 280px;
+    }
+}
+
+#download-chat {
+    flex-shrink: 0;
+    width: 100%;
+    background: #ffffff;
+    color: #16324f;
+    border: 1px solid #cbd5e1;
+}
+
+#download-chat:hover:not(:disabled) {
+    background: #dbeafe;
+}
+
+@media (max-width: 700px) {
+    .chat-sidebar {
+        height: 330px;
+    }
+}
+
+#rename-chat {
+    flex-shrink: 0;
+    width: 100%;
+    background: #ffffff;
+    color: #16324f;
+    border: 1px solid #cbd5e1;
+}
+
+#rename-chat:hover:not(:disabled) {
+    background: #dbeafe;
+}
+
+/* Let sidebar controls scroll if the screen is short */
+.chat-sidebar {
+    overflow-y: auto;
+}
+
+#saved-chats {
+    min-height: 100px;
+}
+
+@media (max-width: 700px) {
+    .chat-sidebar {
+        height: 360px;
+        max-height: 45dvh;
+    }
+}
+
+#chat-search {
+    flex-shrink: 0;
+    width: 100%;
+    padding: 11px 12px;
+
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+
+    background: #ffffff;
+    color: #1e293b;
+    font: inherit;
+    font-size: 14px;
+}
+
+#chat-search:focus {
+    outline: 2px solid #bfdbfe;
+    border-color: #2563eb;
+}
+
+/* Message bubble and controls */
+.message-item {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    max-width: min(85%, 760px);
+    flex-shrink: 0;
+}
+
+.message-item.user {
+    align-self: flex-end;
+    align-items: flex-end;
+}
+
+.message-item.assistant {
+    align-self: flex-start;
+    align-items: flex-start;
+}
+
+.message-item > .message {
+    max-width: 100%;
+    min-width: 0;
+}
+
+/* Icons below each message */
+.message-actions {
+    display: flex;
+    gap: 6px;
+    padding-top: 5px;
+}
+
+.copy-button {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+
+    min-width: 34px;
+    min-height: 34px;
+    padding: 6px 8px;
+
+    background: transparent;
+    color: #64748b;
+    border: none;
+    border-radius: 7px;
+
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+}
+
+.copy-button:hover:not(:disabled) {
+    background: #e2e8f0;
+    color: #16324f;
+}
+
+.copy-button:disabled {
+    opacity: 1;
+    cursor: default;
+}
+
+/* Tooltip appears on hover or keyboard focus */
+.copy-button::after {
+    content: attr(data-tooltip);
+
+    position: absolute;
+    bottom: calc(100% + 7px);
+    left: 50%;
+    transform: translateX(-50%);
+
+    padding: 7px 10px;
+    border-radius: 7px;
+    background: #202020;
+    color: #ffffff;
+
+    font-size: 12px;
+    white-space: nowrap;
+    pointer-events: none;
+
+    opacity: 0;
+    z-index: 5;
+}
+
+.copy-button:hover::after,
+.copy-button:focus-visible::after {
+    opacity: 1;
+}
+
+.message-item.user .message-actions .copy-button::after {
+    left: auto;
+    right: 0;
+    transform: none;
+}
+
+/* Code block with toolbar */
+.code-panel {
+    min-width: 0;
+    margin: 14px 0;
+    border-radius: 10px;
+    background: #172033;
+}
+
+.code-toolbar {
+    display: flex;
+    justify-content: flex-end;
+    padding: 5px 8px;
+
+    background: #263349;
+    border-radius: 10px 10px 0 0;
+}
+
+.code-toolbar .copy-button {
+    color: #e2e8f0;
+}
+
+.code-toolbar .copy-button:hover:not(:disabled) {
+    background: #3b4b65;
+    color: #ffffff;
+}
+
+.markdown-content .code-panel pre {
+    margin: 0;
+    border-radius: 0 0 10px 10px;
+}
+
+@media (max-width: 700px) {
+    .message-item {
+        max-width: 95%;
+    }
+}
+
+/* Compact history area when embedded in a narrow panel */
+@media (max-width: 700px) {
+    .chat-sidebar {
+        height: 150px;
+        max-height: 30dvh;
+        overflow-y: auto;
+    }
+
+    .chat-sidebar > * {
+        flex-shrink: 0;
+    }
+
+    #saved-chats {
+        min-height: 100px;
+    }
+
+    .chat-header {
+        padding: 10px 16px;
+    }
+
+    .chat-header h1 {
+        font-size: 18px;
+    }
+}
+
+/* Anchor the drawer within the embedded chatbot page */
+.app-layout {
+    position: relative;
+    flex-direction: row;
+}
+
+/* Keep room for the spider button beside the heading */
+.app-layout > .chat-container > .chat-header {
+    position: relative;
+    min-height: 78px;
+    padding: 16px 16px 16px 76px;
+}
+
+#toggle-chat-history {
+    position: absolute;
+    top: 16px;
+    left: 16px;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 44px;
+    height: 44px;
+    padding: 7px;
+
+    background: #ffffff;
+    border: 1px solid #cbd5e1;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+#toggle-chat-history img {
+    display: block;
+    width: 30px;
+    height: 30px;
+    object-fit: contain;
+}
+
+#toggle-chat-history:hover {
+    background: #fee2e2;
+    border-color: #ef4444;
+}
+
+#toggle-chat-history[aria-expanded="true"] {
+    border-color: #dc2626;
+    box-shadow: 0 0 0 2px #fee2e2;
+}
+
+#toggle-chat-history:focus-visible {
+    outline: 3px solid #2563eb;
+    outline-offset: 3px;
+}
+
+/* Drawer overlays only the chatbot, below its heading */
+#chat-history-drawer {
+    position: absolute;
+    top: 78px;
+    bottom: 0;
+    left: 0;
+    z-index: 30;
+
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+
+    width: min(300px, 100%);
+    height: auto;
+    max-height: none;
+    min-height: 0;
+    padding: 16px;
+
+    overflow-y: auto;
+    background: #f1f5f9;
+    border-right: 1px solid #cbd5e1;
+    box-shadow: 8px 0 22px rgba(15, 23, 42, 0.15);
+}
+
+#chat-history-drawer[hidden] {
+    display: none;
+}
+
+#chat-history-drawer > * {
+    flex-shrink: 0;
+}
+
+#chat-history-drawer #saved-chats {
+    flex: 1 0 140px;
+    min-height: 140px;
+}
+
+#chat-history-drawer .sidebar-heading p,
+#chat-history-drawer .sidebar-footer {
+    display: block;
+}
+
+
+/* ==========================================
+   Shared note source selector
+   ========================================== */
+
+/* Compact selector above the message box */
+.shared-source-bar {
+    flex-shrink: 0;
+    padding: 12px 32px;
+    background: #f8fafc;
+    border-top: 1px solid #e2e8f0;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.shared-source-heading {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 14px;
+}
+
+.shared-source-heading > div {
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+}
+
+.shared-source-heading strong {
+    color: #16324f;
+    font-size: 14px;
+}
+
+#shared-source-description {
+    color: #64748b;
+    font-size: 12px;
+    line-height: 1.4;
+}
+
+/* Open shared-notes dialog button */
+#open-shared-notes {
+    flex-shrink: 0;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+
+    padding: 9px 13px;
+
+    background: #ffffff;
+    color: #16324f;
+
+    border: 1px solid #94a3b8;
+    border-radius: 8px;
+
+    font-size: 13px;
+}
+
+#open-shared-notes:hover:not(:disabled) {
+    background: #dbeafe;
+    border-color: #2563eb;
+}
+
+#open-shared-notes:focus-visible {
+    outline: 3px solid #93c5fd;
+    outline-offset: 2px;
+}
+
+
+/* ==========================================
+   Selected-note chips
+   ========================================== */
+
+.selected-shared-notes {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 7px;
+
+    margin-top: 9px;
+}
+
+.no-shared-notes {
+    color: #64748b;
+    font-size: 12px;
+    font-style: italic;
+}
+
+/* One selected shared-note chip */
+.shared-note-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+
+    max-width: 100%;
+    padding: 6px 7px 6px 10px;
+
+    background: #e0f2fe;
+    color: #0c4a6e;
+
+    border: 1px solid #7dd3fc;
+    border-radius: 999px;
+
+    font-size: 12px;
+    line-height: 1.2;
+}
+
+.shared-note-chip-text {
+    min-width: 0;
+    max-width: 230px;
+
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.shared-note-chip-owner {
+    font-weight: 700;
+}
+
+/* Remove one selected note */
+.shared-note-chip-remove {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 23px;
+    height: 23px;
+    min-width: 23px;
+    padding: 0;
+
+    background: transparent;
+    color: #075985;
+
+    border: none;
+    border-radius: 50%;
+
+    font-size: 15px;
+    line-height: 1;
+}
+
+.shared-note-chip-remove:hover:not(:disabled) {
+    background: #bae6fd;
+    color: #b91c1c;
+}
+
+
+/* ==========================================
+   Shared notes dialog
+   ========================================== */
+
+.shared-notes-dialog {
+    width: min(620px, calc(100% - 28px));
+    max-height: min(760px, calc(100dvh - 40px));
+
+    padding: 0;
+
+    color: #1e293b;
+    background: #ffffff;
+
+    border: none;
+    border-radius: 16px;
+
+    box-shadow: 0 24px 70px rgba(15, 23, 42, 0.3);
+}
+
+/* Keep a dialog with the hidden attribute invisible */
+.shared-notes-dialog:not([open]) {
+    display: none;
+}
+
+.shared-notes-dialog::backdrop {
+    background: rgba(15, 23, 42, 0.62);
+    backdrop-filter: blur(2px);
+}
+
+.shared-dialog-content {
+    display: flex;
+    flex-direction: column;
+
+    max-height: min(760px, calc(100dvh - 40px));
+    min-height: 0;
+}
+
+
+/* Dialog heading */
+.shared-dialog-header {
+    flex-shrink: 0;
+
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 16px;
+
+    padding: 20px 22px;
+
+    background: #16324f;
+    color: #ffffff;
+}
+
+.shared-dialog-header h2 {
+    margin: 0;
+    font-size: 21px;
+}
+
+.shared-dialog-header p {
+    margin: 7px 0 0;
+
+    color: #dbeafe;
+    font-size: 13px;
+    line-height: 1.5;
+}
+
+.close-shared-notes {
+    flex-shrink: 0;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 36px;
+    height: 36px;
+    padding: 0;
+
+    background: transparent;
+    color: #ffffff;
+
+    border: 1px solid #94a3b8;
+    border-radius: 8px;
+
+    font-size: 18px;
+}
+
+.close-shared-notes:hover:not(:disabled) {
+    background: #28577d;
+}
+
+
+/* ==========================================
+   Student selection
+   ========================================== */
+
+.shared-student-section {
+    flex-shrink: 0;
+
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+
+    padding: 18px 22px 12px;
+}
+
+.shared-student-section label {
+    color: #16324f;
+    font-size: 13px;
+    font-weight: 700;
+}
+
+.shared-student-controls {
+    display: flex;
+    align-items: stretch;
+    gap: 9px;
+}
+
+#shared-note-student {
+    flex: 1;
+    min-width: 0;
+
+    padding: 10px 12px;
+
+    background: #ffffff;
+    color: #1e293b;
+
+    border: 1px solid #94a3b8;
+    border-radius: 8px;
+
+    font: inherit;
+    font-size: 14px;
+}
+
+#shared-note-student:focus {
+    border-color: #2563eb;
+    outline: 2px solid #bfdbfe;
+}
+
+#refresh-shared-notes {
+    flex-shrink: 0;
+
+    padding: 10px 13px;
+
+    background: #f1f5f9;
+    color: #16324f;
+
+    border: 1px solid #cbd5e1;
+}
+
+#refresh-shared-notes:hover:not(:disabled) {
+    background: #dbeafe;
+}
+
+
+/* Dialog progress and error message */
+.shared-note-dialog-status {
+    flex-shrink: 0;
+
+    min-height: 20px;
+    margin: 0;
+    padding: 0 22px 8px;
+
+    color: #475569;
+    font-size: 13px;
+}
+
+.shared-note-dialog-status.error {
+    color: #b91c1c;
+}
+
+
+/* ==========================================
+   Available shared-note list
+   ========================================== */
+
+.shared-note-list {
+    flex: 1;
+    min-height: 150px;
+    max-height: 360px;
+
+    margin: 0 22px;
+    padding: 4px;
+
+    overflow-y: auto;
+
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+
+    background: #f8fafc;
+}
+
+.shared-note-empty {
+    padding: 28px 18px;
+
+    text-align: center;
+    color: #64748b;
+    font-size: 13px;
+    line-height: 1.5;
+}
+
+/* One selectable shared note */
+.shared-note-option {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    align-items: flex-start;
+    gap: 11px;
+
+    margin: 5px;
+    padding: 13px;
+
+    background: #ffffff;
+
+    border: 1px solid #dbe3ee;
+    border-radius: 9px;
+
+    cursor: pointer;
+
+    transition:
+        border-color 0.15s ease,
+        background-color 0.15s ease,
+        box-shadow 0.15s ease;
+}
+
+.shared-note-option:hover {
+    background: #eff6ff;
+    border-color: #93c5fd;
+}
+
+.shared-note-option.selected {
+    background: #dbeafe;
+    border-color: #2563eb;
+    box-shadow: 0 0 0 1px #2563eb;
+}
+
+.shared-note-option.disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+}
+
+.shared-note-option input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    margin: 2px 0 0;
+
+    accent-color: #1d4ed8;
+    cursor: pointer;
+}
+
+.shared-note-option.disabled input[type="checkbox"] {
+    cursor: not-allowed;
+}
+
+.shared-note-details {
+    min-width: 0;
+}
+
+.shared-note-title {
+    display: block;
+
+    overflow-wrap: anywhere;
+
+    color: #16324f;
+    font-size: 14px;
+    font-weight: 700;
+    line-height: 1.4;
+}
+
+.shared-note-owner {
+    display: block;
+    margin-top: 4px;
+
+    color: #475569;
+    font-size: 12px;
+}
+
+.shared-note-date {
+    display: block;
+    margin-top: 4px;
+
+    color: #64748b;
+    font-size: 11px;
+}
+
+
+/* ==========================================
+   Dialog footer
+   ========================================== */
+
+.shared-dialog-footer {
+    flex-shrink: 0;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 14px;
+
+    padding: 16px 22px;
+
+    background: #f8fafc;
+    border-top: 1px solid #e2e8f0;
+}
+
+#selected-shared-note-count {
+    color: #475569;
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.shared-dialog-actions {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+}
+
+#cancel-shared-notes {
+    background: #ffffff;
+    color: #334155;
+    border: 1px solid #cbd5e1;
+}
+
+#cancel-shared-notes:hover:not(:disabled) {
+    background: #e2e8f0;
+}
+
+#apply-shared-notes {
+    background: #1d4ed8;
+    color: #ffffff;
+}
+
+#apply-shared-notes:hover:not(:disabled) {
+    background: #1e40af;
+}
+
+
+/* ==========================================
+   Shared-note loading states
+   ========================================== */
+
+.shared-notes-dialog button:disabled,
+.shared-notes-dialog select:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+
+/* ==========================================
+   Responsive shared-note controls
+   ========================================== */
+
+@media (max-width: 700px) {
+    .shared-source-bar {
+        padding: 10px 16px;
+    }
+
+    .shared-source-heading {
+        align-items: flex-start;
+    }
+
+    #shared-source-description {
+        display: none;
+    }
+
+    #open-shared-notes {
+        padding: 8px 10px;
+    }
+
+    .shared-note-chip-text {
+        max-width: 190px;
+    }
+
+    .shared-notes-dialog {
+        width: calc(100% - 18px);
+        max-height: calc(100dvh - 18px);
+        border-radius: 12px;
+    }
+
+    .shared-dialog-content {
+        max-height: calc(100dvh - 18px);
+    }
+
+    .shared-dialog-header {
+        padding: 16px;
+    }
+
+    .shared-dialog-header h2 {
+        font-size: 18px;
+    }
+
+    .shared-student-section {
+        padding: 14px 16px 10px;
+    }
+
+    .shared-note-dialog-status {
+        padding: 0 16px 8px;
+    }
+
+    .shared-note-list {
+        margin: 0 16px;
+    }
+
+    .shared-student-controls {
+        flex-direction: column;
+    }
+
+    #refresh-shared-notes {
+        align-self: flex-start;
+    }
+
+    .shared-dialog-footer {
+        align-items: stretch;
+        flex-direction: column;
+
+        padding: 14px 16px;
+    }
+
+    .shared-dialog-actions {
+        width: 100%;
+    }
+
+    .shared-dialog-actions button {
+        flex: 1;
+    }
+}
